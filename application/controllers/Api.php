@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class login extends CI_Controller {
+class Api extends CI_Controller {
 	
 	public function __construct()
         {
@@ -9,7 +9,7 @@ class login extends CI_Controller {
 			$this->load->helper('json_output_helper');
 			$this->load->helper('form');
 			$this->load->helper('url');
-			$this->load->model('LoginModel');
+			$this->load->model('ApiModel');
 		}
 	public function index()
 	{
@@ -21,8 +21,7 @@ class login extends CI_Controller {
 		if($method != 'POST'){
 			json_output(400,array('status' => 400,'message' => 'Bad request.'));
 		} else {
-			//json_output(400,array('status' => 400,'message' => 'ESLE Bad request.'));
-			 $check_auth_client = $this->LoginModel->check_auth_client();
+			 $check_auth_client = $this->ApiModel->check_auth_client();
 			
 			if($check_auth_client == true){
 				
@@ -31,11 +30,25 @@ class login extends CI_Controller {
 		        $username = $params['username'];
 		        $password = $params['password'];
 		        	
-		        $response = $this->LoginModel->login($username,$password);
-			   json_output(400,array('status' => 400,'message' =>$response));
-				//echo $response;
-				/*json_output($response['status'],$response); */
+		        $response = $this->ApiModel->login($username,$password);
+			    json_output(400,array('status' => 400,'message' =>$response));
+				
 			} 
+		}
+	}
+	public function emplist()
+	{
+		$method = $_SERVER['REQUEST_METHOD'];
+		if($method != 'GET'){
+			json_output(400,array('status' => 400,'message' => 'Bad request.'));
+		} else {
+			 $check_auth_client = $this->ApiModel->check_auth_client_List();
+			 if($check_auth_client == true){
+				$params = $_REQUEST;
+		        $response = $this->ApiModel->emplist();
+			    json_output(400,array('status' => 400,'message' =>$response));
+				
+			}
 		}
 	}
 }
