@@ -1,0 +1,98 @@
+{
+	"info": {
+		"name": "Suryanand Rest Apis",
+		"_postman_id": "047ce2ab-d402-fb2c-7647-879715d17d6e",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "application/x-www-form-urlencoded",
+						"disabled": true
+					},
+					{
+						"key": "Authentication",
+						"value": "Login_2578564534168463213546846"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "",
+						"value": "",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "Suryanand",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "password@123",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost/Restapi/Api/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"Restapi",
+						"Api",
+						"login"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Employee List",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authentication",
+						"value": "List_2578564534168463213546846"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "http://localhost/Restapi/Api/emplist",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"Restapi",
+						"Api",
+						"emplist"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
