@@ -1,8 +1,7 @@
 {
 	"info": {
-		"name": "Suryanand Rest Apis",
 		"_postman_id": "047ce2ab-d402-fb2c-7647-879715d17d6e",
-		"description": "",
+		"name": "Suryanand Rest Apis",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -58,15 +57,14 @@
 						"Api",
 						"login"
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
 		{
 			"name": "Employee List",
 			"request": {
-				"method": "GET",
+				"method": "POST",
 				"header": [
 					{
 						"key": "Authentication",
@@ -77,7 +75,23 @@
 						"value": "application/x-www-form-urlencoded"
 					}
 				],
-				"body": {},
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "userid",
+							"value": "1",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "token",
+							"value": "+89sM9mPs2RGeEFAKrBZdpA8aIDg7+1sZW96O7AmfnKsRbLxyjFaf2o960kS5FdcOTsFn6tsTan5jAHpk9/n/g==",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
 				"url": {
 					"raw": "http://localhost/Restapi/Api/emplist",
 					"protocol": "http",
@@ -89,8 +103,89 @@
 						"Api",
 						"emplist"
 					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Save Employee",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authentication",
+						"value": "List_2578564534168463213546846"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "username",
+							"value": "gnana",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "password@123",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "firstname",
+							"value": "Gnanavel",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "lastname",
+							"value": "Rajendran",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "mobile",
+							"value": "9677275437",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "gnanavelrajendran@gmail.com",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "userid",
+							"value": "1",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "token",
+							"value": "+89sM9mPs2RGeEFAKrBZdpA8aIDg7+1sZW96O7AmfnKsRbLxyjFaf2o960kS5FdcOTsFn6tsTan5jAHpk9/n/g==",
+							"description": "",
+							"type": "text"
+						}
+					]
 				},
-				"description": ""
+				"url": {
+					"raw": "http://localhost/Restapi/Api/saveemp",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"Restapi",
+						"Api",
+						"saveemp"
+					]
+				}
 			},
 			"response": []
 		}
