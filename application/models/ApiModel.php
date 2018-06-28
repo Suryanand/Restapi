@@ -3,6 +3,8 @@ class ApiModel extends CI_Model {
  	 function __construct(){
      parent::__construct();
 	 $this->load->database();
+	 $this->load->library('session');
+	 $this->load->library('encrypt');
 	 date_default_timezone_set('Asia/Kolkata'); 
   	}
 	var $auth_key = "Login_2578564534168463213546846";
@@ -33,14 +35,16 @@ class ApiModel extends CI_Model {
 			$id = $q->id;
 				if ($id != null) {
 				   $last_login = date('Y-m-d H:i:s');
+				   $hash = $this->encrypt->encode($password+ "_" +$last_login);
 				   $this->db->trans_start();
-				   $this->db->where('id',$id)->update('user',array('last_login' => $last_login));
+				   $this->db->where('id',$id)->update('user',array('last_login' => $last_login , 'last_activity' => $last_login , 'token' => $hash));
 				   if ($this->db->trans_status() === FALSE){
 					  $this->db->trans_rollback();
 					  return array('status' => 500,'message' => 'Internal server error.');
 				   } else {
 					  $this->db->trans_commit();
-					  return array('status' => 200,'message' => "Successful Login",'id' => $id);
+					  $this->session->set_userdata('userid', $id);
+					  return array('status' => 200,'message' => "Successful Login",'id' => $id , 'token' => $hash);
 				   }
 				}else {
 				  return array('status' => 204,'message' => 'Wrong password.', 'id' => $id);
@@ -48,12 +52,40 @@ class ApiModel extends CI_Model {
         }
     }
 	public function emplist(){
-		$q = $this->db->select('*')->from('user')->get()->result();
-		if($q == ""){
-            return array('status' => 204,'message' => 'Username not found.');
+		date_default_timezone_set('Asia/Kolkata');
+		$now = new DateTime();
+		$last_login = $now->format('Y-m-d H:i:s'); //date();
+		$params = $_REQUEST;
+		$userid = $params['userid']; //select * from user where DATE(last_activity) > DATE_SUB(NOW(),INTERVAL 15 MINUTE) and id = '1' and token = 'LLPvSrneo6K3NNwSLrOqddaGTfB8KeNG/1ddDxPn1ar8P5sojCo87TfBW1eLxZgldBn9MSCIHCNkEsnah8uTmg=='
+		$token = $params['token'];
+		$query1 = "select * from user where id = '". $userid ."' and token = '". $token ."'";
+		$query = $this->db->query($query1);
+		$check = $query->row();	
+		$test = date($check->last_activity);
+		$date = date_create_from_format('Y-m-d H:i:s', $check->last_activity);
+		$timediff = round(abs( $date->getTimestamp() - (new \DateTime())->getTimestamp()) / 60 , 0);
+		//$date1 = strtotime($check->last_activity);
+		//$dateprint=date('Y-m-d H:i:s',$date1);
+		//$test1 = $test->format('Y-m-d H:i:s');
+		//$test_diff = date_diff($last_login , $check->last_activity);
+		//$datetime1 = new DateTime();
+		//$datetime2 = new DateTime($check->last_activity);
+		//$interval = $datetime1->diff($datetime2);
+		//$elapsed = $interval->format('%y years %m months %a days %h hours %i minutes %s seconds');
+		//$timeinterval=$interval->format('%y-%m-%a %h:%i:%s');
+		//$datetest=$datetime1-$datetime2;
+		
+        if($timediff > 30){
+            return array('status' => 209,'message' => 'Session Expired.', 'c' => $last_login);
         }
 		else{
-			return array('message' => "All Employees",'Employee List' => $q);
+			$q = $this->db->select('id, username, password, Firstname, Lastname, mobile, email, last_login')->from('user')->get()->result();
+			if($q == ""){
+				return array('status' => 204,'message' => 'Username not found.');
+			}
+			else{
+				return array('message' => "All Employees",'Employee List' => $q );
+			}
 		}
 	}
 

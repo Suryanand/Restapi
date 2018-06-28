@@ -20,34 +20,30 @@ class Api extends CI_Controller {
 		$method = $_SERVER['REQUEST_METHOD'];
 		if($method != 'POST'){
 			json_output(400,array('status' => 400,'message' => 'Bad request.'));
-		} else {
-			 $check_auth_client = $this->ApiModel->check_auth_client();
-			
+		}
+		else{
+			$check_auth_client = $this->ApiModel->check_auth_client();
 			if($check_auth_client == true){
-				
-				 $params = $_REQUEST;
-		        
+				$params = $_REQUEST;
 		        $username = $params['username'];
 		        $password = $params['password'];
-		        	
 		        $response = $this->ApiModel->login($username,$password);
 			    json_output(400,array('status' => 400,'message' =>$response));
-				
 			} 
 		}
 	}
 	public function emplist()
 	{
 		$method = $_SERVER['REQUEST_METHOD'];
-		if($method != 'GET'){
+		if($method != 'POST'){
 			json_output(400,array('status' => 400,'message' => 'Bad request.'));
-		} else {
-			 $check_auth_client = $this->ApiModel->check_auth_client_List();
-			 if($check_auth_client == true){
+		}
+		else{
+			$check_auth_client = $this->ApiModel->check_auth_client_List();
+			if($check_auth_client == true){
 				$params = $_REQUEST;
-		        $response = $this->ApiModel->emplist();
-			    json_output(400,array('status' => 400,'message' =>$response));
-				
+				$response = $this->ApiModel->emplist();
+				json_output(400,array('status' => 400,'message' =>$response));
 			}
 		}
 	}
