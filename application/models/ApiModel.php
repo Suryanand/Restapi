@@ -56,7 +56,7 @@ class ApiModel extends CI_Model {
 		$now = new DateTime();
 		$last_login = $now->format('Y-m-d H:i:s'); //date();
 		$params = $_REQUEST;
-		$userid = $params['userid']; //select * from user where DATE(last_activity) > DATE_SUB(NOW(),INTERVAL 15 MINUTE) and id = '1' and token = 'LLPvSrneo6K3NNwSLrOqddaGTfB8KeNG/1ddDxPn1ar8P5sojCo87TfBW1eLxZgldBn9MSCIHCNkEsnah8uTmg=='
+		$userid = $params['userid']; 
 		$token = $params['token'];
 		$query1 = "select * from user where id = '". $userid ."' and token = '". $token ."'";
 		$query = $this->db->query($query1);
@@ -84,9 +84,57 @@ class ApiModel extends CI_Model {
 				return array('status' => 204,'message' => 'Username not found.');
 			}
 			else{
-				return array('message' => "All Employees",'Employee List' => $q );
+				$this->db->where('id', $userid);
+				$this->db->update('user',array('last_activity' => $last_login) );
+				$affected_rows = $this->db->affected_rows();
+				if($affected_rows){
+					return array('status' => 200,'message' => "All Employees",'Employee List' => $q );
+				}else{
+					return array('status' => 209,'message' => 'Something Went Wrong.');
+				}
 			}
 		}
 	}
-
+	
+	public function saveemp(){
+		date_default_timezone_set('Asia/Kolkata');
+		$now = new DateTime();
+		$last_login = $now->format('Y-m-d H:i:s'); //date();
+		$params = $_REQUEST;
+		$userid = $params['userid'];
+		$data = array(
+			'username' => $params['username'],
+			'password' => $params['password'],
+			'firstname' => $params['firstname'],
+			'lastname' => $params['lastname'],
+			'mobile' => $params['mobile'],
+			'email' => $params['email']
+		);
+		$token = $params['token'];
+		$query1 = "select * from user where id = '". $userid ."' and token = '". $token ."'";
+		$query = $this->db->query($query1);
+		$check = $query->row();	
+		$test = date($check->last_activity);
+		$date = date_create_from_format('Y-m-d H:i:s', $check->last_activity);
+		$timediff = round(abs( $date->getTimestamp() - (new \DateTime())->getTimestamp()) / 60 , 0);
+		if($timediff > 30){
+            return array('status' => 209,'message' => 'Session Expired.', 'c' => $last_login);
+        }
+		else{
+			$this->db->insert('user', $data);
+			$insert_id = $this->db->insert_id();
+			if($insert_id){
+				$this->db->where('id', $userid);
+				$this->db->update('user',array('last_activity' => $last_login) );
+				$affected_rows = $this->db->affected_rows();
+				if($affected_rows){
+					return array('status' => 200,'message' => 'Employee Inserted.');
+				}else{
+					return array('status' => 209,'message' => 'Something Went Wrong.');
+				}
+			}else{
+				return array('status' => 209,'message' => 'Something Went Wrong.');
+			}
+		}
+	}
 }

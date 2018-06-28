@@ -32,6 +32,20 @@ class Api extends CI_Controller {
 			} 
 		}
 	}
+	public function saveemp()
+	{
+		$method = $_SERVER['REQUEST_METHOD'];
+		if($method != 'POST'){
+			json_output(400,array('status' => 400,'message' => 'Bad request.'));
+		}
+		else{
+			$check_auth_client = $this->ApiModel->check_auth_client_List();
+			if($check_auth_client == true){
+				$response = $this->ApiModel->saveemp();
+				json_output(400,array('status' => 400,'message' =>$response));
+			}
+		}
+	}
 	public function emplist()
 	{
 		$method = $_SERVER['REQUEST_METHOD'];
